@@ -1,0 +1,11 @@
+{
+  "name": "decker",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "johnny-five": "^2.1.0",
+    "oled-font-5x7": "^1.0.3",
+    "oled-js": "^5.1.2"
+  }
+}
