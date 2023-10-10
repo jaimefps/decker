@@ -16,9 +16,19 @@ if (!deviceInfo) {
 
 const rfidReader = new HID.HID(deviceInfo.path)
 
+let tagId = ""
+
 rfidReader.on("data", (data) => {
-  const hexString = data.toString("hex")
-  console.log("Data:", hexString)
+  const scancode = data[2]
+
+  // Check for Enter key press (scancode 0x28)
+  if (scancode === 0x28) {
+    console.log("Tag ID:", tagId)
+    tagId = "" // Reset tagId for the next read
+  } else if (scancode !== 0x00) {
+    // Convert scancode to ASCII character and append to tagId
+    tagId += String.fromCharCode(scancode - 0x04 + "a".charCodeAt(0))
+  }
 })
 
 rfidReader.on("error", (err) => {
