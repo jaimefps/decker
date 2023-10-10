@@ -2,6 +2,7 @@ const Oled = require("oled-js")
 const font = require("oled-font-5x7")
 const five = require("johnny-five")
 const HID = require("node-hid")
+const axios = require("axios")
 
 /*
   Product ID:	0x0035
@@ -48,6 +49,27 @@ arduino.on("ready", () => {
   })
 })
 
+function getDataById(id, callback) {
+  const map = {
+    "1e21231e27211f21": "da82977e-89d8-4232-8d45-8ccddca61095",
+    "1e21231e27232622": "75e1eef1-0ce1-4046-96b3-4d681d53f674",
+  }
+
+  const deckId = map[id]
+
+  if (!deckId) {
+    callback("UNKNOWN RFID")
+  }
+
+  axios
+    .get("https://decksofkeyforge.com/api/decks/with-synergies/" + map[id])
+    .then((response) => {
+      const data = response.data
+      const deck = data.deck
+      callback(`${deck.name}: ${deck.sasRating}SAS`)
+    })
+}
+
 let tagId = ""
 
 reader.on("data", (data) => {
@@ -57,7 +79,12 @@ reader.on("data", (data) => {
   // Check for Enter key press (scancode 0x28)
   if (scancode === "28") {
     log("tagId:", tagId)
-    getData(tagId, function (data) {
+    getDataById(tagId, function (data) {
+      if (!oled) {
+        log("oled is disabled")
+        return
+      }
+      oled.clearDisplay()
       oled.setCursor(1, 1)
       oled.writeString(font, 1, data, 1, true, 2)
       oled.update()
@@ -71,14 +98,6 @@ reader.on("data", (data) => {
 reader.on("error", (err) => {
   log(err)
 })
-
-function getData(id, callback) {
-  const map = {
-    "1e21231e27211f21": "CARLOS",
-    "1e21231e27232622": "JAIME",
-  }
-  callback(map[id])
-}
 
 process.on("SIGINT", function () {
   log("shutting down")
