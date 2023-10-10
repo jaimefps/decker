@@ -18,8 +18,8 @@ const HID = require("node-hid")
 const READER_VENDOR_ID = 65535 // 0x0035
 const READER_PRODUCT_ID = 53 // 0xffff
 
-function log(msg) {
-  console.log("[decker]", msg)
+function log(...msgs) {
+  console.log("[decker]", ...msgs)
 }
 
 function getReader() {
@@ -48,12 +48,6 @@ arduino.on("ready", () => {
   })
 })
 
-function write(msg) {
-  oled.setCursor(1, 1)
-  oled.writeString(font, 1, msg, 1, true, 2)
-  oled.update()
-}
-
 let tagId = ""
 
 reader.on("data", (data) => {
@@ -63,7 +57,9 @@ reader.on("data", (data) => {
   // Check for Enter key press (scancode 0x28)
   if (scancode === "28") {
     log("tagId:", tagId)
-    write(tagId)
+    oled.setCursor(1, 1)
+    oled.writeString(font, 1, tagId, 1, true, 2)
+    oled.update()
     tagId = "" // Reset tagId for the next read
   } else if (scancode !== "00") {
     tagId += scancode // Append scancode to tagId
