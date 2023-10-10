@@ -1,16 +1,15 @@
 /*
 Product ID:	0x0035
 Vendor ID:	0xffff
-*/
-const HID = require("node-hid")
+*/ const HID = require("node-hid")
 const devices = HID.devices()
-console.log("testing")
+
 // Log all connected HID devices to find your RFID reader
 console.log(devices)
 
-// Replace '0x0035' and '0xffff' with the vendorId and productId of your RFID reader
+// Use the decimal values for vendorId and productId
 const deviceInfo = devices.find(
-  (device) => device.vendorId === 0x0035 && device.productId === 0xffff
+  (device) => device.vendorId === 65535 && device.productId === 53
 )
 
 if (!deviceInfo) {
