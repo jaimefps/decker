@@ -4,6 +4,9 @@
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
-    "node-hid": "*"
+    "johnny-five": "^2.1.0",
+    "node-hid": "^2.1.2",
+    "oled-font-5x7": "^1.0.3",
+    "oled-js": "^5.1.2"
   }
 }

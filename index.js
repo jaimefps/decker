@@ -13,45 +13,45 @@ board.on("ready", () => {
   console.log("Connected to Arduino, ready.")
 
   const opts = {
-    width: 64,
-    height: 48,
-    microview: true,
+    width: 128,
+    height: 32,
+    address: 0x3c
   }
 
   const oled = new Oled(board, five, opts)
   oled.setCursor(1, 1)
-  oled.writeString(font, 1, "new message here", 1, true, 2)
+  oled.writeString(font, 1, "jaime testing new stuff", 1, true, 2)
   oled.update()
 })
 
-// const HID = require("node-hid")
-// const devices = HID.devices()
+ const HID = require("node-hid")
+ const devices = HID.devices()
 
-// const deviceInfo = devices.find(
-//   (device) => device.vendorId === 65535 && device.productId === 53
-// )
+ const deviceInfo = devices.find(
+   (device) => device.vendorId === 65535 && device.productId === 53
+ )
 
-// if (!deviceInfo) {
-//   console.log("RFID reader not found")
-//   process.exit(1)
-// }
+ if (!deviceInfo) {
+   console.log("RFID reader not found")
+   process.exit(1)
+ }
 
-// const rfidReader = new HID.HID(deviceInfo.path)
+ const rfidReader = new HID.HID(deviceInfo.path)
 
-// let tagId = ""
+ let tagId = ""
 
-// rfidReader.on("data", (data) => {
-//   const scancode = data[2].toString(16).padStart(2, "0") // Convert to 2-digit hexadecimal
+ rfidReader.on("data", (data) => {
+   const scancode = data[2].toString(16).padStart(2, "0") // Convert to 2-digit hexadecimal
 
-//   // Check for Enter key press (scancode 0x28)
-//   if (scancode === "28") {
-//     console.log("Tag ID:", tagId)
-//     tagId = "" // Reset tagId for the next read
-//   } else if (scancode !== "00") {
-//     tagId += scancode // Append scancode to tagId
-//   }
-// })
+   // Check for Enter key press (scancode 0x28)
+   if (scancode === "28") {
+     console.log("Tag ID:", tagId)
+     tagId = "" // Reset tagId for the next read
+   } else if (scancode !== "00") {
+     tagId += scancode // Append scancode to tagId
+   }
+ })
 
-// rfidReader.on("error", (err) => {
-//   console.error("Error:", err)
-// })
+ rfidReader.on("error", (err) => {
+   console.error("Error:", err)
+ })
