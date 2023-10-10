@@ -57,9 +57,11 @@ reader.on("data", (data) => {
   // Check for Enter key press (scancode 0x28)
   if (scancode === "28") {
     log("tagId:", tagId)
-    oled.setCursor(1, 1)
-    oled.writeString(font, 1, tagId, 1, true, 2)
-    oled.update()
+    getData(tagId, (data) => {
+      oled.setCursor(1, 1)
+      oled.writeString(font, 1, getData(data), 1, true, 2)
+      oled.update()
+    })
     tagId = "" // Reset tagId for the next read
   } else if (scancode !== "00") {
     tagId += scancode // Append scancode to tagId
@@ -69,6 +71,14 @@ reader.on("data", (data) => {
 reader.on("error", (err) => {
   log(err)
 })
+
+function getData(id, callback) {
+  const map = {
+    "1e21231e27211f21": "CARLOS",
+    "1e21231e27232622": "JAIME",
+  }
+  callback(map[id])
+}
 
 process.on("SIGINT", function () {
   log("shutting down")
