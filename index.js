@@ -10,9 +10,9 @@ const Oled = require("oled-js")
 const board = new five.Board()
 
 board.on("ready", () => {
-  console.log("Connected to Arduino, ready.")
+ console.log("Connected to Arduino, ready.")
 
-  const opts = {
+const opts = {
     width: 128,
     height: 32,
     address: 0x3c
@@ -28,7 +28,7 @@ board.on("ready", () => {
  const devices = HID.devices()
 
  const deviceInfo = devices.find(
-   (device) => device.vendorId === 65535 && device.productId === 53
+    (device) => device.vendorId === 65535 && device.productId === 53
  )
 
  if (!deviceInfo) {
