@@ -57,9 +57,9 @@ reader.on("data", (data) => {
   // Check for Enter key press (scancode 0x28)
   if (scancode === "28") {
     log("tagId:", tagId)
-    getData(tagId, (data) => {
+    getData(tagId, function (data) {
       oled.setCursor(1, 1)
-      oled.writeString(font, 1, getData(data), 1, true, 2)
+      oled.writeString(font, 1, data, 1, true, 2)
       oled.update()
     })
     tagId = "" // Reset tagId for the next read
