@@ -2,6 +2,7 @@
 Product ID:	0x0035
 Vendor ID:	0xffff
 */
+
 const HID = require("node-hid")
 const devices = HID.devices()
 
@@ -19,15 +20,14 @@ const rfidReader = new HID.HID(deviceInfo.path)
 let tagId = ""
 
 rfidReader.on("data", (data) => {
-  const scancode = data[2]
+  const scancode = data[2].toString(16).padStart(2, "0") // Convert to 2-digit hexadecimal
 
   // Check for Enter key press (scancode 0x28)
-  if (scancode === 0x28) {
+  if (scancode === "28") {
     console.log("Tag ID:", tagId)
     tagId = "" // Reset tagId for the next read
-  } else if (scancode !== 0x00) {
-    // Convert scancode to ASCII character and append to tagId
-    tagId += String.fromCharCode(scancode - 0x04 + "a".charCodeAt(0))
+  } else if (scancode !== "00") {
+    tagId += scancode // Append scancode to tagId
   }
 })
 
