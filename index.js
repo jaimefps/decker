@@ -49,7 +49,12 @@ arduino.on("ready", () => {
   })
 })
 
-function getDataById(id, callback) {
+async function getDataById(id, callback) {
+  log("fetching data for:", id)
+
+  // TODO: make a json sync read/write
+  // to have a light persistence layer
+  // that can be accessed via some ui:
   const map = {
     "1e21231e27211f21": "da82977e-89d8-4232-8d45-8ccddca61095",
     "1e21231e27232622": "75e1eef1-0ce1-4046-96b3-4d681d53f674",
@@ -61,13 +66,17 @@ function getDataById(id, callback) {
     callback("UNKNOWN RFID")
   }
 
-  axios
-    .get("https://decksofkeyforge.com/api/decks/with-synergies/" + map[id])
-    .then((response) => {
-      const data = response.data
-      const deck = data.deck
-      callback(`${deck.name}: ${deck.sasRating}SAS`)
-    })
+  try {
+    await axios
+      .get("https://decksofkeyforge.com/api/decks/with-synergies/" + map[id])
+      .then((response) => {
+        const data = response.data
+        const deck = data.deck
+        callback(`${deck.name}: ${deck.sasRating}SAS`)
+      })
+  } catch (err) {
+    log("axios:", err)
+  }
 }
 
 let tagId = ""
@@ -78,7 +87,6 @@ reader.on("data", (data) => {
 
   // Check for Enter key press (scancode 0x28)
   if (scancode === "28") {
-    log("tagId:", tagId)
     getDataById(tagId, function (data) {
       if (!oled) {
         log("oled is disabled")
@@ -101,6 +109,6 @@ reader.on("error", (err) => {
 
 process.on("SIGINT", function () {
   log("shutting down")
-  reader.close()
-  process.exit(0)
+  // reader.close()
+  // process.exit(0)
 })
