@@ -3,7 +3,18 @@ const SerialPort = require("serialport")
 const Reader = SerialPort.parsers.Readline
 const parser = new Reader({ delimiter: "\r\n" })
 
-const port = new SerialPort("/dev/cu.usbmodem1101", {
+const usb = {
+  mac: {
+    uno: "/dev/cu.usbmodem1101",
+    nano: "/dev/cu.usbserial-110",
+  },
+  pi: {
+    uno: "",
+    nano: "",
+  },
+}
+
+const port = new SerialPort(usb.mac.nano, {
   flowControl: false,
   baudRate: 9600,
   parity: "none",
