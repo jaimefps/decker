@@ -1,8 +1,16 @@
+/*
+  NOTE: This is a prototype
+*/
+
 const Oled = require("oled-js")
 const font = require("oled-font-5x7")
 const five = require("johnny-five")
 const HID = require("node-hid")
 const axios = require("axios")
+
+/*
+  /dev/cu.usbmodem1101
+ */
 
 /*
   Product ID:	0x0035
@@ -96,8 +104,9 @@ reader.on("data", (data) => {
       oled.setCursor(1, 1)
       oled.writeString(font, 1, data, 1, true, 2)
       oled.update()
+    }).then(() => {
+      tagId = "" // Reset tagId for the next read
     })
-    tagId = "" // Reset tagId for the next read
   } else if (scancode !== "00") {
     tagId += scancode // Append scancode to tagId
   }
